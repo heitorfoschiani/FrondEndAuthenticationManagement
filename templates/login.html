@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LoginMenager</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
+    <script src="https://kit.fontawesome.com/694bd12192.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <main id="login">
+        <form id="form-login" method="post">
+            {{ form_login.csrf_token }}
+
+            <h2 id="title">Login</h2>
+
+            <div class="input-space">
+                <label class="form-label" for="usename">Username</label>
+                {% if not form_login.username.errors %}
+                    {{ form_login.username(class="text-field", autocomplete="off") }}
+                {% else %}
+                    {{ form_login.username(class="text-field", autocomplete="off", style="border-color: red;") }}
+                    <div class="invalid-feedback">
+                        {% for erro in form_login.username.errors %}
+                            {{ erro }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="input-space">
+                <label class="form-label" for="password">Password</label>
+                {% if not form_login.password.errors %}
+                    {{ form_login.password(class="text-field", autocomplete="off") }}
+                {% else %}
+                    {{ form_login.password(class="text-field", autocomplete="off", style="border-color: red;") }}
+                    <div class="invalid-feedback">
+                        {% for erro in form_login.password.errors %}
+                            {{ erro }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <span id="password-view-button">
+                    <i class="fas fa-eye-slash" id="password-view"></i>
+                </span>
+            </div>
+
+            <div>
+                {{ form_login.remember_data.label(class="form-check-label") }}
+                {{ form_login.remember_data(class="form-check-input") }}
+            </div>
+
+            <div id="form-submit-button">
+                {{ form_login.submit() }}
+            </div>
+
+            <a href="{{ url_for('create_account') }}">create account</a>
+        </form>
+    </main>
+    <script src="{{url_for('static', filename='js/login.js')}}"></script>
+</body>
+
+</html>

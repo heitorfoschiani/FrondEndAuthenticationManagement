@@ -1,0 +1,126 @@
+body {
+    font-family: Arial;
+    color: #030220;
+    margin: 0;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    background: #030220;
+}
+
+main {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    width: 50%;
+    height: 100%;
+}
+
+#form-login {
+    width: 275px;
+}
+
+#title {
+    text-align: center;
+}
+
+.input-space {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 1.5em;
+}
+
+.form-label {
+    position: absolute;
+    top: 6px;
+    pointer-events: none;
+    color: #636567;
+    font-size: 14px;
+    transition: all 0.2s ease-out;
+    transition-property: transform, color, background-color, padding;
+}
+
+.form-label.active {
+    transform: translateY(-15px);
+    font-size: 12px;
+    color: #030220;
+    background-color: #ffffff;
+    padding: 0 6px;
+}
+
+.text-field {
+    height: 25px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #030220;
+    border-radius: 5px;
+}
+
+.text-field:focus {
+    box-shadow: 0 0 6px #030230;
+    outline: #030230;
+}
+
+.invalid-feedback {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+}
+
+#password-view-button {
+    cursor: pointer;
+}
+
+#password-view {
+    position: absolute;
+    top: 7px;
+    left: 90%;
+    color: #696F79;
+}
+
+#form-submit-button {
+    cursor: pointer;
+}
+
+#submit {
+    display: block;
+    margin: auto;
+    width: 175px;
+    height: 25px;
+    border-radius: 5px;
+    background-color: #030220;
+    border: 1px solid #030220;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+#submit:hover {
+    box-shadow: 0 0 2px #030230;
+}
+
+a {
+    font-size: 16px;
+    display: block;
+    text-align: center;
+    padding-top: 15px;
+    text-decoration: none;
+    color: #030220;
+}
+
+a:hover {
+    text-decoration: underline;
+}
