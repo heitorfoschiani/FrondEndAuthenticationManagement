@@ -38,7 +38,6 @@ main {
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 1.5em;
 }
 
 .form-label {
@@ -79,6 +78,14 @@ main {
     text-align: center;
 }
 
+#username-field {
+    margin-bottom: 1.4em;
+}
+
+#password-field {
+    margin-bottom: 1em;
+}
+
 #password-view-button {
     cursor: pointer;
 }
@@ -88,6 +95,11 @@ main {
     top: 7px;
     left: 90%;
     color: #696F79;
+}
+
+#remember-me-field {
+    text-align: center;
+    margin-bottom: 1em;
 }
 
 #form-submit-button {

@@ -38,7 +38,6 @@ main {
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 1.5em;
 }
 
 .form-label {
@@ -79,6 +78,26 @@ main {
     text-align: center;
 }
 
+#full-name-field {
+    margin-bottom: 1.4em;
+}
+
+#email-field {
+    margin-bottom: 1.4em;
+}
+
+#phone-field {
+    margin-bottom: 1.4em;
+}
+
+#username-field {
+    margin-bottom: 1.4em;
+}
+
+#password-field {
+    margin-bottom: 1.4em;
+}
+
 #password-view-button {
     cursor: pointer;
 }
@@ -90,8 +109,16 @@ main {
     color: #696F79;
 }
 
+#password-confirm-field {
+    margin-bottom: 1em;
+}
+
 #password-confirm-view-button {
     cursor: pointer;
+}
+
+#remember-me-field {
+    margin-bottom: 1em;
 }
 
 #password-confirm-view {
@@ -99,6 +126,11 @@ main {
     top: 6px;
     left: 90%;
     color: #696F79;
+}
+
+#remember-me-field {
+    text-align: center;
+    margin-bottom: 1em;
 }
 
 #form-submit-button {

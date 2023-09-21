@@ -15,7 +15,7 @@
 
             <h2 id="title">Login</h2>
 
-            <div class="input-space">
+            <div class="input-space" id="username-field">
                 <label class="form-label" for="usename">Username</label>
                 {% if not form_login.username.errors %}
                     {{ form_login.username(class="text-field", autocomplete="off") }}
@@ -29,7 +29,7 @@
                 {% endif %}
             </div>
 
-            <div class="input-space">
+            <div class="input-space" id="password-field">
                 <label class="form-label" for="password">Password</label>
                 {% if not form_login.password.errors %}
                     {{ form_login.password(class="text-field", autocomplete="off") }}
@@ -46,9 +46,9 @@
                 </span>
             </div>
 
-            <div>
-                {{ form_login.remember_data.label(class="form-check-label") }}
+            <div id="remember-me-field">
                 {{ form_login.remember_data(class="form-check-input") }}
+                <label>Remember me</label>
             </div>
 
             <div id="form-submit-button">

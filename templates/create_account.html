@@ -13,7 +13,7 @@
 
                 <h2 id="title">Create Account</h2>
 
-                <div class="input-space">
+                <div class="input-space" id="full-name-field">
                     <label class="form-label" for="full_name">Full Name</label>
                     {% if not form_create_account.full_name.errors %}
                         {{ form_create_account.full_name(class="text-field", autocomplete="off") }}
@@ -27,7 +27,7 @@
                     {% endif %}
                 </div>
 
-                <div class="input-space">
+                <div class="input-space" id="email-field">
                     <label class="form-label" for="email">Email</label>
                     {% if not form_create_account.email.errors %}
                         {{ form_create_account.email(class="text-field", autocomplete="off") }}
@@ -41,7 +41,7 @@
                     {% endif %}
                 </div>
 
-                <div class="input-space">
+                <div class="input-space" id="phone-field">
                     <label class="form-label" for="phone">Phone</label>
                     {% if not form_create_account.phone.errors %}
                         {{ form_create_account.phone(class="text-field", autocomplete="off") }}
@@ -55,7 +55,7 @@
                     {% endif %}
                 </div>
 
-                <div class="input-space">
+                <div class="input-space" id="username-field">
                     <label class="form-label" for="username">Username</label>
                     {% if not form_create_account.username.errors %}
                         {{ form_create_account.username(class="text-field", autocomplete="off") }}
@@ -69,7 +69,7 @@
                     {% endif %}
                 </div>
 
-                <div class="input-space">
+                <div class="input-space" id="password-field">
                     <label class="form-label" for="password">Password</label>
                     {% if not form_create_account.password.errors %}
                         {{ form_create_account.password(class="text-field", autocomplete="off") }}
@@ -86,7 +86,7 @@
                     </span>
                 </div>
 
-                <div class="input-space">
+                <div class="input-space" id="password-confirm-field">
                     <label class="form-label" for="password_confirm">Password Confirmation</label>
                     {% if not form_create_account.password_confirm.errors %}
                         {{ form_create_account.password_confirm(class="text-field", autocomplete="off") }}
@@ -101,6 +101,11 @@
                     <span id="password-confirm-view-button">
                         <i class="fas fa-eye-slash" id="password-confirm-view"></i>
                     </span>
+                </div>
+
+                <div id="remember-me-field">
+                    {{ form_create_account.remember_data(class="form-check-input") }}
+                    <label>Remember me</label>
                 </div>
 
                 <div id="form-submit-button">
