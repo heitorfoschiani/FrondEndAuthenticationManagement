@@ -1,36 +1,19 @@
-# Author: Heitor Foschiani de Souza
-# Email: heitor.foschiani@outlook.com
-# Number: (11) 9 4825-3334
-
-# Importing libraries
 from flask import Flask, render_template, redirect, url_for, jsonify, session
-from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+from flask_login import LoginManager, login_user, logout_user, current_user
 from flask_cors import CORS
 
-# Importing python files from the project 
+from user import User
 import api_requests
 from forms import FormCreateAccount, FormLogin
 
 
-# Starting app
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '4102087637c66ee9c57d27ef6e043233'
-
 CORS(app)
 
-# Login menagement
+
 login_manager = LoginManager(app)
-
-class User(UserMixin):
-    def __init__(self, user_id, full_name, email, phone, username):
-        self._id = user_id
-        self.full_name = full_name
-        self.email = email
-        self.phone = phone
-        self.username = username
-
-    def get_id(self):
-        return str(self._id)
         
 @login_manager.user_loader
 def load_user(user_id):
@@ -80,7 +63,6 @@ def load_user(user_id):
     return None
 
 
-# User menagement routes
 @app.route('/create-account', methods=['GET', 'POST'])
 def create_account():
     form_create_account = FormCreateAccount()
@@ -167,7 +149,7 @@ def login():
     
     return render_template('login.html', form_login=form_login)
 
-@app.route('/get-api-access-token')
+@app.route('/get-api-access-token', methods=['GET'])
 def get_api_access_token():
     if current_user.is_authenticated and 'access_token' in session:
         return jsonify(access_token=session['access_token']), 200
@@ -180,7 +162,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-# App routes
 @app.route('/')
 def home():
     if current_user.is_authenticated:

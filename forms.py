@@ -1,8 +1,3 @@
-# Author: Heitor Foschiani de Souza
-# Email: heitor.foschiani@outlook.com
-# Number: (11) 9 4825-3334
-
-# Importing libraries
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 import re

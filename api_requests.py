@@ -1,10 +1,4 @@
-# Author: Heitor Foschiani de Souza
-# Email: heitor.foschiani@outlook.com
-# Number: (11) 9 4825-3334
-
-# Libraries
 import requests
-import json
 
 def get_api_url():
     api_url = 'http://127.0.0.1:5001'
