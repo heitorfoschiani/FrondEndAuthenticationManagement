@@ -7,7 +7,6 @@ import api_requests
 from forms import FormCreateAccount, FormLogin
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '4102087637c66ee9c57d27ef6e043233'
 CORS(app)
@@ -168,13 +167,5 @@ def home():
         return render_template('home.html')
     else:   
         return redirect(url_for('login'))
-
-
-if __name__ == '__main__':
-    app.run(
-        host='127.0.0.1',
-        port=5000,
-        debug=True,
-    )
 
 
