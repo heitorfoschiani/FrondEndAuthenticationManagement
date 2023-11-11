@@ -16,50 +16,16 @@ login_manager = LoginManager(app)
         
 @login_manager.user_loader
 def load_user(user_id):
-    access_token = session.get('access_token')
+    access_token = session['access_token']
     if not access_token:
         return None
-    
-    response = api_requests.get_authenticated_user_infos(access_token)
-    if response.status_code == 200:
-        js = response.json()
-        
-        user_id = int(js['id'])
-        full_name = js['full_name']
-        email = js['email']
-        phone = js['phone']
-        username = js['username']
 
-        user = User(user_id, full_name, email, phone, username)
-        return user
-    elif response.status_code == 401:
-        refresh_token = session.get('refresh_token')
-        if not refresh_token:
-            return None
-        
-        response = api_requests.refresh_authentication(refresh_token)
-        if response.status_code == 200:
-            js = response.json()
+    user = User(
+        user_id = user_id, 
+        access_token = access_token
+    )
 
-            access_token = js['access_token']
-            refresh_token = js['refresh_token']
-            session['access_token'] = access_token
-            session['refresh_token'] = refresh_token
-
-            response = api_requests.get_authenticated_user_infos(access_token)
-            if response.status_code == 200:
-                js = response.json()
-                
-                user_id = int(js['id'])
-                full_name = js['full_name']
-                email = js['email']
-                phone = js['phone']
-                username = js['username']
-
-                user = User(user_id, full_name, email, phone, username)
-                return user
-
-    return None
+    return user
 
 
 @app.route('/create-account', methods=['GET', 'POST'])
@@ -79,24 +45,23 @@ def create_account():
         # getting back user informations
         if response.status_code == 200:
             # login user
-            access_token = response.json()['access_token']
+            js = response.json()
+
+            user_id = js['user_id']
+            access_token = js['access_token']
+            refresh_token = js['refresh_token']
+
+            session['user_id'] = user_id
             session['access_token'] = access_token
-            response = api_requests.get_authenticated_user_infos(access_token)
-            if response.status_code == 200:
-                js = response.json()
+            session['refresh_token'] = refresh_token
 
-                user_id = int(js['id'])
-                full_name = js['full_name']
-                email = js['email']
-                phone = js['phone']
-                username = js['username']
+            user = User(
+                user_id = user_id, 
+                access_token = access_token
+            )
+            login_user(user)
 
-                user = User(user_id, full_name, email, phone, username)
-                login_user(user)
-
-                return redirect('/')
-            else:
-                form_create_account.password.errors.append('Something get wrong')
+            return redirect(url_for('home'))
         elif response.status_code == 401:
             if 'email' in response.text:
                 form_create_account.email.errors.append('This email already exist')
@@ -124,34 +89,51 @@ def login():
         elif response.status_code == 200:
             # login user
             js = response.json()
+
+            user_id = js['user_id']
             access_token = js['access_token']
             refresh_token = js['refresh_token']
+
+            session['user_id'] = user_id
             session['access_token'] = access_token
             session['refresh_token'] = refresh_token
 
-            response = api_requests.get_authenticated_user_infos(access_token)
-            if response.status_code == 200:
-                js = response.json()
-                
-                user_id = int(js['id'])
-                full_name = js['full_name']
-                email = js['email']
-                phone = js['phone']
-                username = js['username']
+            user = User(
+                user_id = user_id, 
+                access_token = access_token
+            )
+            login_user(user)
 
-                user = User(user_id, full_name, email, phone, username)
-                login_user(user)
-
-                return redirect(url_for('home'))
-            else:
-                form_login.password.errors.append('Something get wrong')
+            return redirect(url_for('home'))
+        else:
+            form_login.password.errors.append('Something get wrong')
     
     return render_template('login.html', form_login=form_login)
 
-@app.route('/get-api-access-token', methods=['GET'])
-def get_api_access_token():
+@app.route('/get-access-token', methods=['GET'])
+def get_access_token():
     if current_user.is_authenticated and 'access_token' in session:
-        return jsonify(access_token=session['access_token']), 200
+        access_token = session['access_token']
+        return jsonify(access_token=access_token), 200
+    else:
+        return jsonify(error="unauthorized"), 401
+    
+@app.route('/refresh-access-token')
+def refresh_access_token():
+    if current_user.is_authenticated and 'refresh_token' in session:
+        response = api_requests.refresh_authentication(session['refresh_token'])
+        if response.status_code == 200:
+            js = response.json()
+
+            user_id = js['user_id']
+            access_token = js['access_token']
+            refresh_token = js['refresh_token']
+
+            session['user_id'] = user_id
+            session['access_token'] = access_token
+            session['refresh_token'] = refresh_token
+
+            return jsonify(access_token=access_token), 200
     else:
         return jsonify(error="unauthorized"), 401
 
@@ -167,5 +149,3 @@ def home():
         return render_template('home.html')
     else:   
         return redirect(url_for('login'))
-
-
