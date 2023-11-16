@@ -1,70 +1,70 @@
-const full_name_field = document.getElementById('full_name');
-const email_field = document.getElementById('email');
-const phone_field = document.getElementById('phone');
-const username_field = document.getElementById('username');
-const password_field = document.getElementById('password')
-const password_confirm_field = document.getElementById('password_confirm');
+const full_name_field = document.getElementById("full_name");
+const email_field = document.getElementById("email");
+const phone_field = document.getElementById("phone");
+const username_field = document.getElementById("username");
+const password_field = document.getElementById("password")
+const password_confirm_field = document.getElementById("password_confirm");
 
-full_name_field.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
+full_name_field.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
         event.preventDefault();
         email_field.focus();
     };
 });
 
-email_field.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
+email_field.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
         event.preventDefault();
         phone_field.focus();
-    }
+    };
 });
 
-phone_field.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
+phone_field.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
         event.preventDefault();
         username_field.focus();
     };
 });
 
-username_field.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
+username_field.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
         event.preventDefault();
         password_field.focus();
     };
 });
 
-password_field.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
+password_field.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
         event.preventDefault();
         password_confirm_field.focus();
     };
 });
 
-password_confirm_field.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        document.getElementById('form-create-account').submit();
+password_confirm_field.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        document.getElementById("form-create-account").submit();
     };
 });
 
 // floar label
-const form_control = document.querySelectorAll('.text-field');
+const form_control = document.querySelectorAll(".text-field");
 
 form_control.forEach(control => {
-    const label = control.closest('.input-space').querySelector('label');
+    const label = control.closest(".input-space").querySelector("label");
 
-    control.addEventListener('focus', () => {
-        label.classList.add('active');
+    control.addEventListener("focus", () => {
+        label.classList.add("active");
     });
 
-    control.addEventListener('blur', () => {
-        if (control.value.trim() === '') {
-            label.classList.remove('active');
-        }
+    control.addEventListener("blur", () => {
+        if (control.value.trim() === "") {
+            label.classList.remove("active");
+        };
     });
 
-    if (control.value.trim() !== '') {
-        label.classList.add('active');
-    }
+    if (control.value.trim() !== "") {
+        label.classList.add("active");
+    };
 });
 
 // password vizualization

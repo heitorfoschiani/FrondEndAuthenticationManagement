@@ -1,22 +1,33 @@
-from flask import Flask, render_template, redirect, url_for, jsonify, session
-from flask_login import LoginManager, login_user, logout_user, current_user
-from flask_cors import CORS
+# Author: Heitor Foschiani de Souza
+# Email: heitor.foschiani@outlook.com
+# Phone-number: (11) 9 4825-3334
 
-from user import User
+from flask import Flask, render_template, redirect, url_for, jsonify, session
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+from flask_cors import CORS
+import jwt
+from datetime import datetime, timedelta
+
 import api_requests
 from forms import FormCreateAccount, FormLogin
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '4102087637c66ee9c57d27ef6e043233'
+app.config["SECRET_KEY"] = "my-secret-key"
 CORS(app)
 
 
+# User management
 login_manager = LoginManager(app)
-        
+
+class User(UserMixin):
+    def __init__(self, user_id, access_token):
+        self.id = user_id
+        self.access_token = access_token
+
 @login_manager.user_loader
 def load_user(user_id):
-    access_token = session['access_token']
+    access_token = session["access_token"]
     if not access_token:
         return None
 
@@ -27,8 +38,8 @@ def load_user(user_id):
 
     return user
 
-
-@app.route('/create-account', methods=['GET', 'POST'])
+# User management routes
+@app.route("/create-account", methods=["GET", "POST"])
 def create_account():
     form_create_account = FormCreateAccount()
 
@@ -47,13 +58,13 @@ def create_account():
             # login user
             js = response.json()
 
-            user_id = js['user_id']
-            access_token = js['access_token']
-            refresh_token = js['refresh_token']
+            user_id = js["user_id"]
+            access_token = js["access_token"]
+            refresh_token = js["refresh_token"]
 
-            session['user_id'] = user_id
-            session['access_token'] = access_token
-            session['refresh_token'] = refresh_token
+            session["user_id"] = user_id
+            session["access_token"] = access_token
+            session["refresh_token"] = refresh_token
 
             user = User(
                 user_id = user_id, 
@@ -61,16 +72,16 @@ def create_account():
             )
             login_user(user)
 
-            return redirect(url_for('home'))
+            return redirect(url_for("home"))
         elif response.status_code == 401:
-            if 'email' in response.text:
-                form_create_account.email.errors.append('This email already exist')
-            elif 'username' in response.text:
-                form_create_account.username.errors.append('This username already exist')
+            if "email" in response.text:
+                form_create_account.email.errors.append("This email already exist")
+            elif "username" in response.text:
+                form_create_account.username.errors.append("This username already exist")
     
-    return render_template('create_account.html', form_create_account=form_create_account)
+    return render_template("create_account.html", form_create_account=form_create_account)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     form_login = FormLogin()
 
@@ -81,22 +92,22 @@ def login():
         # requesting permission on the back-end (API)
         response = api_requests.authenticate_user(username, password)
         if response.status_code == 404:
-            form_login.username.errors.append('Non-existent username.')
+            form_login.username.errors.append("Non-existent username.")
         elif response.status_code == 401:
-            form_login.password.errors.append('Incorrect password.')
+            form_login.password.errors.append("Incorrect password.")
         elif response.status_code == 500:
-            form_login.password.errors.append('Error on server.')
+            form_login.password.errors.append("Error on server.")
         elif response.status_code == 200:
             # login user
             js = response.json()
 
-            user_id = js['user_id']
-            access_token = js['access_token']
-            refresh_token = js['refresh_token']
+            user_id = js["user_id"]
+            access_token = js["access_token"]
+            refresh_token = js["refresh_token"]
 
-            session['user_id'] = user_id
-            session['access_token'] = access_token
-            session['refresh_token'] = refresh_token
+            session["user_id"] = user_id
+            session["access_token"] = access_token
+            session["refresh_token"] = refresh_token
 
             user = User(
                 user_id = user_id, 
@@ -104,48 +115,48 @@ def login():
             )
             login_user(user)
 
-            return redirect(url_for('home'))
+            return redirect(url_for("home"))
         else:
-            form_login.password.errors.append('Something get wrong')
+            form_login.password.errors.append("Something get wrong")
     
-    return render_template('login.html', form_login=form_login)
+    return render_template("login.html", form_login=form_login)
 
-@app.route('/get-access-token', methods=['GET'])
+@app.route("/get-access-token", methods=["GET"])
 def get_access_token():
-    if current_user.is_authenticated and 'access_token' in session:
-        access_token = session['access_token']
+    if current_user.is_authenticated and "access_token" in session:
+        access_token = session["access_token"]
+        decoded_jwt = jwt.decode(access_token, options={"verify_signature": False})
+
+        exp_time = datetime.fromtimestamp(decoded_jwt["exp"])
+        now = datetime.now()
+
+        if (exp_time - now) <= timedelta(minutes=1):
+            response = api_requests.refresh_authentication(session["refresh_token"])
+            if response.status_code == 200:
+                js = response.json()
+
+                user_id = js["user_id"]
+                access_token = js["access_token"]
+                refresh_token = js["refresh_token"]
+
+                session["user_id"] = user_id
+                session["access_token"] = access_token
+                session["refresh_token"] = refresh_token
+
         return jsonify(access_token=access_token), 200
     else:
         return jsonify(error="unauthorized"), 401
-    
-@app.route('/refresh-access-token')
-def refresh_access_token():
-    if current_user.is_authenticated and 'refresh_token' in session:
-        response = api_requests.refresh_authentication(session['refresh_token'])
-        if response.status_code == 200:
-            js = response.json()
 
-            user_id = js['user_id']
-            access_token = js['access_token']
-            refresh_token = js['refresh_token']
-
-            session['user_id'] = user_id
-            session['access_token'] = access_token
-            session['refresh_token'] = refresh_token
-
-            return jsonify(access_token=access_token), 200
-    else:
-        return jsonify(error="unauthorized"), 401
-
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
 
 
-@app.route('/')
+# App routes
+@app.route("/")
 def home():
     if current_user.is_authenticated:
-        return render_template('home.html')
+        return render_template("home.html")
     else:   
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))

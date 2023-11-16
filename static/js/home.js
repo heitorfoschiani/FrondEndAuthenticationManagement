@@ -1,5 +1,5 @@
 async function get_user_access_token() {
-    const response = await fetch('http://127.0.0.1:5000/get-access-token');
+    const response = await fetch("http://127.0.0.1:5000/get-access-token");
     
     if (response.status === 200) {
         const data = await response.json();
