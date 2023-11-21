@@ -97,9 +97,31 @@ main {
     color: #696F79;
 }
 
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1em;
+}
+
 #remember-me-field {
-    text-align: center;
-    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.form-check-input {
+    margin-right: 0.5em;
+}
+
+#password-forgot {
+    text-align: right;
+}
+
+#password-forgot-link {
+    font-size: 14px;
+    padding: 0;
 }
 
 #form-submit-button {

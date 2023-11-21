@@ -27,7 +27,8 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    access_token = session["access_token"]
+    access_token = session["access_token"] if "access_token" in session else None
+    
     if not access_token:
         return None
 
@@ -142,6 +143,8 @@ def get_access_token():
                 session["user_id"] = user_id
                 session["access_token"] = access_token
                 session["refresh_token"] = refresh_token
+
+                current_user.access_token = access_token
 
         return jsonify(access_token=access_token), 200
     else:
